@@ -1,10 +1,36 @@
 ﻿@using Todo.Controllers
 @using Todo.Data.Entities
 @using Todo.Services
+@using Todo.Models.TodoItems
 @model Todo.Models.TodoLists.TodoListDetailViewmodel
 
 @{
     ViewData["Title"] = $"List: {Model.Title}";
+}
+
+@{
+    Func<TodoItemSummaryViewmodel, Microsoft.AspNetCore.Html.IHtmlContent> ListItem = 	
+	          
+    @<div class="row">
+        <div class="col-md-8">
+            <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
+                @if (item.IsDone)
+                {
+                    <s>@item.Title</s>
+                }
+                else
+                {
+                    <text>@item.Title</text>
+                }
+            </a>
+        </div>
+        <div class="col-md-4 text-right">
+            <small>
+                @item.ResponsibleParty.UserName
+                <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
+            </small>
+        </div>
+    </div>;
 }
 
 <h2>@ViewData["Title"]</h2>
@@ -19,51 +45,35 @@
             </a>
         </li>
 
+		@foreach (var item in Model.Items)
+        {
+			if(item.Importance == Importance.Low)
+			{
+				<li class="list-group-item list-group-item-info">  
+					@ListItem(item)
+				</li>
+			}
+        }
+
+		@foreach (var item in Model.Items)
+        {
+			if(item.Importance == Importance.Medium)
+			{
+				<li class="list-group-item">  
+					@ListItem(item)
+				</li>
+			}
+        }
+
         @foreach (var item in Model.Items)
         {
-            string contextualClass;
-            switch (item.Importance)
-            {
-                case Importance.High:
-                    contextualClass = "list-group-item-danger";
-                    break;
-                case Importance.Low:
-                    contextualClass = "list-group-item-info";
-                    break;
-                default:
-                    contextualClass = "";
-                    break;
-            }
-
-            <li class="list-group-item @contextualClass">
-                
-                <div class="row">
-
-                <div class="col-md-8">
-                    <a asp-action="Edit" asp-controller="TodoItem" asp-route-todoItemId="@item.TodoItemId">
-
-                        @if (item.IsDone)
-                        {
-                            <s>@item.Title</s>
-                        }
-                        else
-                        {
-                            <text>@item.Title</text>
-                        }
-                    </a>
-                </div>
-
-                <div class="col-md-4 text-right">
-                    <small>
-                        @item.ResponsibleParty.UserName
-
-                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
-
-                    </small>
-                </div>
-                </div>
-
-            </li>
+			if(item.Importance == Importance.High)
+			{
+				<li class="list-group-item list-group-item-danger">  
+					@ListItem(item)
+				</li>
+			}
         }
+
     </ul>
 </div>
