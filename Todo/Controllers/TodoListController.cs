@@ -39,6 +39,12 @@ namespace Todo.Controllers
         }
 
         [HttpGet]
+        public IActionResult FilteredIndex()
+        {
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Create()
         {
             return View(new TodoListFields());

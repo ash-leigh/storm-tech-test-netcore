@@ -7,11 +7,32 @@
     ViewData["Title"] = $"List: {Model.Title}";
 }
 
+<script type="text/javascript">
+	function OrderItemsByRank(chkOrderByRank)
+	{
+		if (chkOrderByRank.checked)
+		{
+			alert("checked");
+			$.ajax({
+				url: '@Url.Action("FilteredIndex")',
+				type: 'GET',
+				cache: false,
+				success: function(data) {
+					$('#destination').html(data);
+				}
+			});
+		}
+	}
+</script>
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
 
-	<div><label>Order by Rank</label>@Html.CheckBoxFor(m => m.OrderByRank, new {@checked = false})</div>
+	<div>
+		<label>Order by Rank</label>
+		<input asp-for="OrderByRank" onclick="OrderItemsByRank(this)"/>
+	</div>
 
     <ul class="list-group">
 
@@ -21,7 +42,9 @@
             </a>
         </li>
 
-        @foreach (var item in Model.Items)
+		@{var reOrderedItems = Model.Items.OrderByDescending(x => x.Rank);}
+
+        @foreach (var item in reOrderedItems)
         {
             string contextualClass;
             switch (item.Importance)
