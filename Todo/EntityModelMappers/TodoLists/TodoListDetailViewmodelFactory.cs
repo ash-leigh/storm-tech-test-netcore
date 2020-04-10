@@ -9,7 +9,8 @@ namespace Todo.EntityModelMappers.TodoLists
     {
         public static TodoListDetailViewmodel Create(TodoList todoList, bool hideDoneItems)
         {
-            var items = todoList.Items.Select(TodoItemSummaryViewmodelFactory.Create).ToList();
+            var items = hideDoneItems ? todoList.Items.Select(TodoItemSummaryViewmodelFactory.Create).Where(x => !x.IsDone).ToList()
+                : todoList.Items.Select(TodoItemSummaryViewmodelFactory.Create).ToList();
             return new TodoListDetailViewmodel(todoList.TodoListId, todoList.Title, items, hideDoneItems);
         }
     }
