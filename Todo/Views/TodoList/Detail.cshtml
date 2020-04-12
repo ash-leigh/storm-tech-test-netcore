@@ -9,16 +9,12 @@
 
 <h2>@ViewData["Title"]</h2>
 
+<Partial name="_CreateTodoItem" model="@Model.CreateTodoItem"/>	
+
 <div class="col-md-6">
 
     <ul class="list-group">
-
-        <li class="list-group-item">
-            <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
-                <strong>Add New Item</strong>
-            </a>
-        </li>
-
+		
         @foreach (var item in Model.Items)
         {
             string contextualClass;
