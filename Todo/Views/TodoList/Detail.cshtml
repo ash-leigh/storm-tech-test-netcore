@@ -6,6 +6,7 @@
 @{
     ViewData["Title"] = $"List: {Model.Title}";
 }
+
 <h2>@ViewData["Title"]</h2>
 
 <div class="col-md-6">
@@ -54,23 +55,11 @@
 
                 <div class="col-md-4 text-right">
                     <small>
-					    <script type='text/javascript'>
-							$.ajax({
-									type: "GET",
-									url: "https://www.gravatar.com/@Gravatar.GetHash(" + @item.ResponsibleParty.UserName + ")" + ".json",
-									dataType: "json"
-							}).done(function(data){
-										$('#'+@item.TodoItemId+'.div .name').html(data.entry[0].displayName)
-								};)
-						</script>
-                        <div id="@item.TodoItemId">
-                            <div class="name"></div>
-                            <div class="emailAddress">@item.ResponsibleParty.UserName</div>
-                            <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30" />
-                        </div>                        
-                    </small>
+                        @item.ResponsibleParty.UserName
+						@await Gravatar.GetFullNameAsync(item.ResponsibleParty.Email)
+                        <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
 
-					
+                    </small>
                 </div>
                 </div>
 
