@@ -56,7 +56,7 @@
                 <div class="col-md-4 text-right">
                     <small>
                         @item.ResponsibleParty.UserName
-
+						@await Gravatar.GetFullNameAsync(item.ResponsibleParty.Email)
                         <img src="https://www.gravatar.com/avatar/@Gravatar.GetHash(item.ResponsibleParty.Email)?s=30"/>
 
                     </small>
