@@ -22,12 +22,32 @@
 		</form>
 	</div>
 
+	<div>
+        <button>Save Order</button>
+    </div>
+
 	<script type="text/javascript">
 	    $(document).ready(function () {
 			$(function () {
 				$('#sortable').sortable()
 			});
+		
+			$('button').on('click', 
+			function(){
+				var ids = [];
+				$('.list-group-item').each(function (index, value) {
+					var id = $(value).prop('id');
+					ids.push(id);
+				});
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("UpdateRank")",
+					data: {todoItemIds: ids, todoListId : @Model.TodoListId},
+					dataType: "text"
+				}); 
+			})
 		})
+
 	</script>
 
     <ul id="sortable" class="list-group">
@@ -54,7 +74,7 @@
                     break;
             }
 
-            <li class="list-group-item @contextualClass">
+            <li class="list-group-item @contextualClass" id="@item.TodoItemId">
                 
                 <div class="row">
 

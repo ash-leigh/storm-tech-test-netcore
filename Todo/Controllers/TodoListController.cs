@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -63,7 +65,24 @@ namespace Todo.Controllers
             await dbContext.AddAsync(todoList);
             await dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Create", "TodoItem", new {todoList.TodoListId});
+            return RedirectToAction("Create", "TodoItem", new { todoList.TodoListId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRank(int[] todoItemIds, int todoListId)
+        { 
+            for (var i = 0; i <= todoItemIds.Length-1; i++)
+            {
+                var todoItem = dbContext.SingleTodoItem(todoItemIds[i]);
+                todoItem.Rank = i;
+
+                dbContext.Update(todoItem);
+                await dbContext.SaveChangesAsync();
+
+            }
+
+            return RedirectToAction("Detail", "TodoList", new { todoListId, orderByRank = true });
+            
         }
     }
 }
