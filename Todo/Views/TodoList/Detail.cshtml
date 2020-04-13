@@ -11,7 +11,46 @@
 
 <div class="col-md-6">
 
-    <ul class="list-group">
+	<div>
+		<form name="OrderByRank"
+			   asp-controller="TodoList" 
+			   asp-action="Detail"			   
+			   asp-route-todoListId="@Model.TodoListId"
+			   asp-route-orderByRank="@(!Model.OrderByRank)">
+			   <input checked="@(Model.OrderByRank)" name="OrderByRankChk" type="checkbox" onclick="document.OrderByRank.submit()" />
+			   <label for="OrderByRankChk">Order by Rank</label>
+		</form>
+	</div>
+
+	<div>
+        <button>Save Order</button>
+    </div>
+
+	<script type="text/javascript">
+	    $(document).ready(function () {
+			$(function () {
+				$('#sortable').sortable()
+			});
+		
+			$('button').on('click', 
+			function(){
+				var ids = [];
+				$('.list-group-item').each(function (index, value) {
+					var id = $(value).prop('id');
+					ids.push(id);
+				});
+				$.ajax({
+					type: "POST",
+					url: "@Url.Action("UpdateRank")",
+					data: {todoItemIds: ids, todoListId : @Model.TodoListId},
+					dataType: "text"
+				}); 
+			})
+		})
+
+	</script>
+
+    <ul id="sortable" class="list-group">
 
         <li class="list-group-item">
             <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
@@ -35,7 +74,7 @@
                     break;
             }
 
-            <li class="list-group-item @contextualClass">
+            <li class="list-group-item @contextualClass" id="@item.TodoItemId">
                 
                 <div class="row">
 

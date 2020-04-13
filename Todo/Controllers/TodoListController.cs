@@ -1,4 +1,6 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -31,11 +33,17 @@ namespace Todo.Controllers
             return View(viewmodel);
         }
 
-        public IActionResult Detail(int todoListId)
+        public IActionResult Detail(int todoListId, bool orderByRank)
         {
             var todoList = dbContext.SingleTodoList(todoListId);
-            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList);
+            var viewmodel = TodoListDetailViewmodelFactory.Create(todoList, orderByRank);
             return View(viewmodel);
+        }
+
+        [HttpGet]
+        public IActionResult FilteredIndex()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -57,7 +65,24 @@ namespace Todo.Controllers
             await dbContext.AddAsync(todoList);
             await dbContext.SaveChangesAsync();
 
-            return RedirectToAction("Create", "TodoItem", new {todoList.TodoListId});
+            return RedirectToAction("Create", "TodoItem", new { todoList.TodoListId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateRank(int[] todoItemIds, int todoListId)
+        { 
+            for (var i = 0; i <= todoItemIds.Length-1; i++)
+            {
+                var todoItem = dbContext.SingleTodoItem(todoItemIds[i]);
+                todoItem.Rank = i;
+
+                dbContext.Update(todoItem);
+                await dbContext.SaveChangesAsync();
+
+            }
+
+            return RedirectToAction("Detail", "TodoList", new { todoListId, orderByRank = true });
+            
         }
     }
 }
