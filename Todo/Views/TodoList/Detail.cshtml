@@ -11,7 +11,16 @@
 
 <div class="col-md-6">
 
-	<div><label>Order by Rank</label>@Html.CheckBoxFor(m => m.OrderByRank, new {@checked = false})</div>
+	<div>
+		<form name="OrderByRank"
+			   asp-controller="TodoList" 
+			   asp-action="Detail"			   
+			   asp-route-todoListId="@Model.TodoListId"
+			   asp-route-orderByRank="@(!Model.OrderByRank)">
+			   <input checked="@(Model.OrderByRank)" name="OrderByRankChk" type="checkbox" onclick="document.OrderByRank.submit()" />
+			   <label for="OrderByRankChk">Order by Rank</label>
+		</form>
+	</div>
 
     <ul class="list-group">
 
