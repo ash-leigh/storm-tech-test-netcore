@@ -22,7 +22,15 @@
 		</form>
 	</div>
 
-    <ul class="list-group">
+	<script type="text/javascript">
+	    $(document).ready(function () {
+			$(function () {
+				$('#sortable').sortable()
+			});
+		})
+	</script>
+
+    <ul id="sortable" class="list-group">
 
         <li class="list-group-item">
             <a asp-action="Create" asp-controller="TodoItem" asp-route-todoListId="@Model.TodoListId">
